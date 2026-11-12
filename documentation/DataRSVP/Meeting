@@ -1,0 +1,48 @@
+MEETING TABLE
+============
+
+Purpose
+-------
+Represents one planned meetup or event.
+
+Fields
+------
+- Id: Generated integer primary key
+- Title: String
+- Description: String
+- Created at: Date/time when the host creates the meeting (storage type TBD)
+- Host: User.Id (foreign key)
+- Venue name: TEXT, required
+- Venue city: TEXT, required
+- Venue street address: TEXT, required; visible only to users with approved RSVPs
+- Venue time zone: Required time-zone identifier (exact format and storage type TBD)
+- Category: Exactly one category describing the kind or purpose of the event; MVP labels are Social/Conversation, Sports/Athletics, Business/Networking, and Hobbies. The list is fixed for the MVP; changes require an app update.
+- Maximum group capacity: Integer, from 4 to 10 people total, including the host
+- Interests: Interest[] (TypeScript app model; stored through MeetingInterest records)
+- Start date and time: When the meeting begins, shown in the venue's local time zone (storage type TBD)
+- RSVP cutoff date and time: Exact time chosen by the host; must be before the start time and shown in the venue's local time zone (storage type TBD)
+- Status: Scheduled, Cancelled, or Completed (storage type TBD)
+
+Relationships
+-------------
+- Each meeting has one host; a user can host multiple meetings.
+- Non-host users request to attend through RSVP records.
+- A meeting can have multiple interests; the connections are stored through MeetingInterest records.
+
+Event lifecycle
+---------------
+1. A curated host creates and publishes the meeting; it becomes visible immediately. The meeting must be scheduled within 30 days of its creation.
+2. Non-host users submit RSVP requests. The host approves or declines requests.
+3. Approved RSVPs count toward the maximum capacity; pending requests do not. Once capacity is reached, new requests are no longer accepted.
+4. The host chooses an exact RSVP cutoff date and time before the meeting; show it in the venue's local time zone.
+5. At the cutoff, if fewer than four total participants (host plus approved RSVPs) are confirmed, the meeting is canceled or rescheduled and RSVP users are notified.
+6. After the meeting, the host marks only the approved attendees who showed up; other approved attendees remain unmarked.
+
+Additional decisions
+--------------------
+- If the host revokes an approved RSVP, the spot becomes available for another request.
+- Rescheduling updates the same meeting; existing approved RSVPs stay active and attendees are notified.
+- A rescheduled meeting remains Scheduled.
+- Attendance may help measure participation and repeat attendance, but is not a safety rating.
+- "Casual" is treated separately from category for now; how to represent event style is TBD.
+- Transferring the host role may be considered as a future feature.

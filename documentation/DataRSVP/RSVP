@@ -1,0 +1,29 @@
+RSVP
+====
+
+Purpose
+-------
+Records a non-host user's request to attend a meeting and the current outcome.
+
+Fields
+------
+- Id: Generated integer primary key
+- User: User.Id (foreign key to the requesting user)
+- Meeting: Meeting.Id (foreign key to the requested meeting)
+- Request status: Current state of the request (working values: pending, approved, declined, cancelled, revoked; storage type TBD)
+- Attendance mark: Unset unless the host marks that the approved attendee showed up (representation TBD)
+- Request time: Whether to record this is TBD
+- Latest host-decision time: Whether to record this is TBD
+
+Relationships and behavior
+--------------------------
+- An RSVP refers to one non-host user and one meeting.
+- A user may have only one current RSVP for a meeting at a time; the User and Meeting pair must be unique.
+- A new request is pending until the host approves or declines it.
+- If the host declines a request, the user may submit another request later.
+- A user may cancel a pending request or approved RSVP any time before the meeting. Canceling an approved RSVP frees the spot.
+- The host may revoke an approved RSVP; the spot becomes available for another request.
+- Approved RSVPs count toward the meeting's capacity; pending requests do not.
+- Only the current RSVP state is kept. A later request updates the same RSVP, and prior request attempts are not retained.
+- After the meeting, the host marks only the approved attendees who showed up; other approved attendees remain unmarked.
+- Attendance is not a measure of whether a user is safe.

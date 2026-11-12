@@ -1,0 +1,26 @@
+USER TABLE
+==========
+
+Purpose: Holds user records.
+
+Proposed PostgreSQL fields
+--------------------------
+- Id: INTEGER identity primary key
+- Display name: TEXT, required; duplicates allowed
+- Email: TEXT, required and unique; managed by the authentication provider; private and not shown on the public profile
+- Authentication provider user ID: TEXT, required and unique
+- Password: Managed by the authentication provider; not stored in the app database
+- DOB: DATE, required; stored for 20+ eligibility and kept private
+- Age: Derived from DOB only to verify the user is 20+; not stored separately or shown to other users
+- City: TEXT, required; shown on the user's profile
+- State/province: TEXT, required; shown on the user's profile
+- Interests: Optional Interest[] in the TypeScript app model; stored through UserInterest records, not as a User column
+
+These PostgreSQL types are a working draft. Authentication-provider-specific details may change when the provider is selected.
+
+Relationships
+--------------
+- A user can select multiple interests; the connections are stored through UserInterest records.
+- A user can host multiple meetings; each meeting has one host.
+- A user can request to attend multiple meetings; these connections are tracked through RSVP records.
+- Hosted and RSVP'd meetings are retrieved when needed, not stored as lists on the User record.

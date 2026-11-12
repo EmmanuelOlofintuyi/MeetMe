@@ -1,0 +1,35 @@
+INTEREST TABLE
+==============
+
+Purpose
+-------
+Stores the approved interest tags that users and meetings can select from.
+
+Fields
+------
+- Id: Generated integer primary key
+- Name: One interest label (data type TBD)
+
+TypeScript app model
+--------------------
+- A User and a Meeting can each have an Interest[]; each item is an Interest with an Id and Name.
+- This describes the relationship in the application model, not how it is stored in the database.
+
+Relationships
+-------------
+- A user can select multiple interests; an interest can be selected by multiple users.
+- A meeting can have multiple interest tags; an interest can be used by multiple meetings.
+
+Connections
+-----------
+- UserInterest connects a User.Id to an Interest.Id.
+- MeetingInterest connects a Meeting.Id to an Interest.Id.
+- A User.Id and Interest.Id pair can appear only once in UserInterest.
+- A Meeting.Id and Interest.Id pair can appear only once in MeetingInterest.
+- PostgreSQL needs a way to persist these many-to-many connections; an ORM may manage the join tables.
+- The ORM has not been selected yet.
+
+List management
+---------------
+- The list is curated.
+- Users may suggest additions; how suggestions are reviewed is TBD.
